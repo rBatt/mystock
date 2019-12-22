@@ -35,3 +35,7 @@ docs/_build/
 
 # App Data (personal)
 .appdata/
+
+# Dev tools
+.ipynb_checkpoints/*
+*.ipynb
