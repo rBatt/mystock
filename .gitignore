@@ -32,3 +32,6 @@ docs/_build/
 
 # IDE settings
 .vscode/
+
+# App Data (personal)
+.appdata/
