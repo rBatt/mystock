@@ -94,6 +94,31 @@ class ApiCall:
     @api_key.setter
     def api_key(self, value):
         self._api_key = value
-        
 
+    @staticmethod
+    def _format_call_history(x):
+        s_dict = json.loads(x)
+        tckr = s_dict['name']
+        df = pd.DataFrame(s_dict['history']).T
+        df.index.name = 'date'
+        df.loc[:,"symbol"] = tckr
+        df.set_index(['symbol'], append=True, inplace=True)
+        return df
 
+    def _format_call_stock_multi(self, x):
+        x_dict = json.loads(x)
+        df = pd.DataFrame(x_dict['data']).set_index('symbol')
+        df.loc[:, "date"] = self._today
+        return df
+
+    def _form_api_call(self, options):
+        """Gather User Requests to Fashion API Call
+        """
+        opts = self.defaults[self.call_type].copy() # defaults for this type of call
+        assert all(options.keys in opts), "invalid option keys; all configurable options in defaults"
+        opts.update(options)
+        opts['api_token'] = self.api_key
+        sub_list = [k+"="+v for k,v in opts.items()]
+        sub = '&'.join(sub_list)
+        api_call = self.call_skele[self.call_type].format(options=sub)
+        return api_call
