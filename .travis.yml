@@ -5,4 +5,4 @@ cache: pip
 install:
   - pip install -r requirements.txt
 script:
-  - python python -m unittest discover
+  - python mystock/tests/test_apicall.py
