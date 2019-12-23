@@ -37,5 +37,5 @@ docs/_build/
 .appdata/
 
 # Dev tools
-.ipynb_checkpoints/*
+.ipynb_checkpoints/
 *.ipynb
