@@ -11,8 +11,7 @@ class ApiCall:
 
     def _get_key(self):
         if not self.keydir_exists:
-            prompt_key = lambda: input("Enter API Key: ") # easier to test
-            api_key = prompt_key()
+            api_key = input("Enter API Key: ")
             with open(self.keydir, mode='w+') as f:
                 f.write(api_key)
         else:
@@ -22,7 +21,6 @@ class ApiCall:
 
 
     def __init__(self, tckr, token=None):
-        pass
         self.keydir = os.path.join(os.path.dirname(__file__), '..', '.appdata', 'apikey.txt')
         self._api_key = None
 
