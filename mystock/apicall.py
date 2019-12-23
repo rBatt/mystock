@@ -1,13 +1,53 @@
 """Form API Calls"""
 
 import os
+import datetime
+import json
+import pandas as pd
 
 class ApiCall:
-    real_time_stock = "https://api.worldtradingdata.com/api/v1/stock?symbol={tckr}&api_token={token}" # tckr should be something like 'ATVI,SNAP'
-    real_time_mf = "https://api.worldtradingdata.com/api/v1/mutualfund?symbol={tckr}&api_token={token}"
-    intraday = "https://intraday.worldtradingdata.com/api/v1/intraday?symbol={tckr}&range=1&interval=1&api_token={token}"
-    historical = "https://api.worldtradingdata.com/api/v1/history?symbol={tckr}&sort=newest&api_token={token}"
+    call_skele = {
+        "real_time_stock": "https://api.worldtradingdata.com/api/v1/stock?{options}" # tckr should be something like 'ATVI,SNAP'
+        , "real_time_mf": "https://api.worldtradingdata.com/api/v1/mutualfund?{options}"
+        , "intraday": "https://intraday.worldtradingdata.com/api/v1/intraday?{options}"
+        , "historical": "https://api.worldtradingdata.com/api/v1/history?{options}"
+        , "forex_historical": "https://api.worldtradingdata.com/api/v1/forex_history?{options}"
+    }
 
+    defaults = {
+        "real_time_stock" : {
+            "symbol": None
+            , "api_token": None
+            , "sort_order": "asc"
+            , "sort_by": "symbol"
+            , "output": "json"
+        }
+        , "real_time_mf": {
+            "symbol": None
+            , "api_token": None
+            , "sort_order": "asc"
+            , "sort_by": "symbol"
+            , "output": "json"
+        }
+        , "intraday" : {
+            "symbol": None
+            , "api_token": None
+            , "interval": "5" # minutes; 1, 2, 5, 60; maybe also 15?
+            , "range": "7" # number of days data is returned for; 1 min intervals limited to 7 days max, all other intervals 30 days max
+            , "sort": "desc"
+            , "ouput": "json"
+            , "formatted": "false" # Alter JSON data format. Does not affect CSV
+        }
+        , "historical" : {
+            "symbol": None
+            , "api_token": None
+            , "date_from": "2018-01-02"
+            , "date_to": "2018-06-01"
+            , "sort": "oldest"
+            , "output": "json"
+            , "formatted": "false"
+        }
+    }
 
     def _get_key(self):
         if not self.keydir_exists:
