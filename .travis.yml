@@ -5,4 +5,5 @@ cache: pip
 install:
   - pip install -r requirements.txt
 script:
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)
   - python mystock/tests/test_apicall.py
