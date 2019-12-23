@@ -7,7 +7,7 @@ setup(
     version='0.0.0',
     description='Provides updates and information on select financial instruments',
     author='Ryan D. Batt',
-    license='BSD',
+    license='MIT',
     author_email='battrd@gmail.com',
     url='https://github.com/rBatt/mystock',
     keywords=['finance', 'schedule', 'package', ],
