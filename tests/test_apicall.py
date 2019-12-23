@@ -9,11 +9,11 @@ from mystock.apicall import ApiCall
 class TestEmployee(unittest.TestCase):
 
     def setUp(self):
-        self.call1 = ApiCall(tckr='ATVI')
+        self.call1 = ApiCall()
         # self.call1.api_key = 'testKey'
         self.call1.keyfile = re.sub(r"apikey.txt", "apikey_test.txt", self.call1.keyfile)
 
-        self.call2 = ApiCall(tckr='VOO')
+        self.call2 = ApiCall()
 
     def tearDown(self):
         os.remove(self.call1.keyfile)
