@@ -59,8 +59,17 @@ class ApiCall:
                 api_key = f.read()
         return api_key
 
+    def __init__(self, call_type="historical"):
+        # assertion checks
+        assert isinstance(call_type, str), 'call_type must be str'
+        call_type_opts = ['historical', 'real_time_stock', 'real_time_mf', 'intraday']
+        assert call_type in call_type_opts, f"call type must be one of {', '.join(call_type_opts)}"
 
-    def __init__(self, tckr, token=None):
+        # straightforward attributes
+        self.call_type = call_type
+        self._today = str(datetime.datetime.today().date())
+
+        # get attr for key and its directory
         path_pieces = (
             os.path.dirname(__file__)
             , '..'
