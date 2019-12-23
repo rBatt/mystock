@@ -21,7 +21,13 @@ class ApiCall:
 
 
     def __init__(self, tckr, token=None):
-        self.keydir = os.path.join(os.path.dirname(__file__), '..', '.appdata', 'apikey.txt')
+        key_path = (
+            os.path.dirname(__file__)
+            , '..'
+            , '.appdata'
+            , 'apikey.txt'
+        )
+        self.keydir = os.path.join(*key_path)
         self._api_key = None
 
     @property
