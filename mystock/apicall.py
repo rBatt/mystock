@@ -12,27 +12,29 @@ class ApiCall:
     def _get_key(self):
         if not self.keydir_exists:
             api_key = input("Enter API Key: ")
-            with open(self.keydir, mode='w+') as f:
+            with open(self.keyfile, mode='w+') as f:
                 f.write(api_key)
         else:
-            with open(self.keydir) as f:
+            with open(self.keyfile) as f:
                 api_key = f.read()
         return api_key
 
 
     def __init__(self, tckr, token=None):
-        key_path = (
+        path_pieces = (
             os.path.dirname(__file__)
             , '..'
             , '.appdata'
-            , 'apikey.txt'
         )
-        self.keydir = os.path.join(*key_path)
+        self.key_path = os.path.join(*path_pieces)
+        if not os.path.exists(self.key_path):
+            os.makedirs(self.key_path)
+        self.keyfile = os.path.join(self.key_path, 'apikey.txt')
         self._api_key = None
 
     @property
     def keydir_exists(self):
-        return os.path.exists(self.keydir)
+        return os.path.exists(self.keyfile)
 
     @property
     def api_key(self):
