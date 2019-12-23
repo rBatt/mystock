@@ -115,7 +115,7 @@ class ApiCall:
         """Gather User Requests to Fashion API Call
         """
         opts = self.defaults[self.call_type].copy() # defaults for this type of call
-        assert all(options.keys in opts), "invalid option keys; all configurable options in defaults"
+        assert options.keys() <= opts.keys(), "invalid option keys; all configurable options in defaults"
         opts.update(options)
         opts['api_token'] = self.api_key
         sub_list = [k+"="+v for k,v in opts.items()]
