@@ -4,6 +4,7 @@ import os
 import datetime
 import json
 import pandas as pd
+import requests
 
 class ApiCall:
     call_skele = {
@@ -122,3 +123,21 @@ class ApiCall:
         sub = '&'.join(sub_list)
         api_call = self.call_skele[self.call_type].format(options=sub)
         return api_call
+
+    def execute_call(self, options, output='raw'):
+        assert isinstance(output, str), 'output must be str'
+        assert output in ['raw', 'df']
+        api_call = self._form_api_call(options)
+        response = requests.get(api_call)
+        if output == 'raw':
+            return response
+        elif output == 'df':
+            formatter = {
+                'historical': self._format_call_history
+                , "real_time_stock": self._format_call_stock_multi
+                , "real_time_mf": None
+                , "intraday": None
+                , "forex_historical": None
+            }.get(self.call_type, None)
+            assert formatter, f'call_type={self.call_type} df formatter not yet implemented'
+            return formatter(response.txt)
