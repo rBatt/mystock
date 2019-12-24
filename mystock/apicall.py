@@ -36,7 +36,7 @@ class ApiCall:
             , "range": "7" # number of days data is returned for; 1 min intervals limited to 7 days max, all other intervals 30 days max
             , "sort": "desc"
             , "ouput": "json"
-            , "formatted": "false" # Alter JSON data format. Does not affect CSV
+            , "formatted": "true" # Alter JSON data format. Does not affect CSV
         }
         , "historical" : {
             "symbol": None
@@ -45,7 +45,7 @@ class ApiCall:
             , "date_to": "2018-06-01"
             , "sort": "oldest"
             , "output": "json"
-            , "formatted": "false"
+            , "formatted": "true"
         }
     }
 
