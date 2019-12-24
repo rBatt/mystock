@@ -6,7 +6,7 @@ import os
 
 from mystock.apicall import ApiCall
 
-class TestEmployee(unittest.TestCase):
+class TestApiCall(unittest.TestCase):
 
     def setUp(self):
         self.call1 = ApiCall()
