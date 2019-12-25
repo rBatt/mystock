@@ -140,4 +140,4 @@ class ApiCall:
                 , "forex_historical": None
             }.get(self.call_type, None)
             assert formatter, f'call_type={self.call_type} df formatter not yet implemented'
-            return formatter(response.txt)
+            return formatter(response.text)
