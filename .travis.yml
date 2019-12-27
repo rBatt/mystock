@@ -3,10 +3,14 @@ python:
   - "3.6"
 cache: pip
 install:
+  - pip install coveralls
+  - pip install pytest
+  - pip install pytest-cov
   - pip install -r requirements.txt
   - pip install -e .
 script:
-  - python tests/test_apicall.py
-  - coverage run tests/test_apicall.py
+  # - python tests/test_apicall.py
+  # - coverage run tests/test_apicall.py
+  - pytest --cov=tests/
 afer_success:
   - coveralls
