@@ -51,6 +51,14 @@ class ApiCall:
     }
 
     def _get_key(self):
+        """Get API Key
+
+        Searches for API key in a file, if not found, prompts user
+        for key then stores it in a file for next time.
+
+        Returns:
+            str: returns the API key
+        """
         if not self.keydir_exists:
             api_key = input("Enter API Key: ")
             with open(self.keyfile, mode='w+') as f:
@@ -61,6 +69,13 @@ class ApiCall:
         return api_key
 
     def __init__(self, call_type="historical"):
+        """Initialize API Call
+
+        Args:
+            call_type (str, optional): The type of API Call.
+                Defaults to "historical". See `ApiCall().defaults`
+                for other types of calls and the options for them.
+        """
         # assertion checks
         assert isinstance(call_type, str), 'call_type must be str'
         call_type_opts = ['historical', 'real_time_stock', 'real_time_mf', 'intraday']
@@ -98,6 +113,15 @@ class ApiCall:
 
     @staticmethod
     def _format_call_history(x):
+        """Format Call Output From 'history' to a DataFrame
+        
+        Args:
+            x (str): json string from api call; if format=True in
+                the call options
+
+        Returns:
+            DataFrame: a pandas dataframe
+        """
         s_dict = json.loads(x)
         tckr = s_dict['name']
         df = pd.DataFrame(s_dict['history']).T
@@ -107,6 +131,15 @@ class ApiCall:
         return df
 
     def _format_call_stock_multi(self, x):
+        """Format Call Output From Stock (multiple) to a DataFrame
+        
+        Args:
+            x (str): json string from api call; if format=True in
+                the call options
+
+        Returns:
+            DataFrame: a pandas dataframe
+        """
         x_dict = json.loads(x)
         df = pd.DataFrame(x_dict['data']).set_index('symbol')
         df.loc[:, "date"] = self._today
@@ -114,6 +147,12 @@ class ApiCall:
 
     def _form_api_call(self, options):
         """Gather User Requests to Fashion API Call
+
+        Args:
+            options (dict): see ApiCall.defaults for options; all options must exist in defaults
+
+        Returns:
+            str: string formatted as json output
         """
         opts = self.defaults[self.call_type].copy() # defaults for this type of call
         assert options.keys() <= opts.keys(), "invalid option keys; all configurable options in defaults"
@@ -125,6 +164,16 @@ class ApiCall:
         return api_call
 
     def execute_call(self, options, output='raw'):
+        """Form and execute an API Call, returning json or DataFrame
+        
+        Args:
+            options (dict): options for API call, see ApiCall.defaults
+            output (str, optional): format of output, either 'raw' JSON
+                or 'df' for a Pandas DataFrame. Defaults to 'raw'.
+
+        Returns:
+            str or DataFrame: either a JSON string or a pandas DataFrame
+        """
         assert isinstance(output, str), 'output must be str'
         assert output in ['raw', 'df']
         api_call = self._form_api_call(options)
