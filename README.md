@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rBatt/mystock.svg?branch=master)](https://travis-ci.org/rBatt/mystock)
+[![Build Status](https://travis-ci.org/rBatt/mystock.svg?branch=master)](https://travis-ci.org/rBatt/mystock) [![Coverage Status](https://coveralls.io/repos/github/rBatt/mystock/badge.svg?branch=master)](https://coveralls.io/github/rBatt/mystock?branch=master)
 # My Stock
 
 Simple utility to provide updates on select stocks, bonds, ETF's.
