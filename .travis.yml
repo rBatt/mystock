@@ -7,5 +7,6 @@ install:
   - pip install -e .
 script:
   - python tests/test_apicall.py
+  - coverage run tests/test_apicall.py
 afer_success:
   - coveralls
