@@ -39,3 +39,6 @@ docs/_build/
 # Dev tools
 .ipynb_checkpoints/
 *.ipynb
+
+# Testing
+.coverage
