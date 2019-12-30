@@ -30,5 +30,10 @@ class TestApiCall(unittest.TestCase):
         out2 = get_tdays_per_yr(x=x2)
         self.assertDictEqual(out2_dict, out2)
 
+        x3 = ['2018', '2020', '2019']
+        out3_dict = {'2018': 251, '2019': 252, '2020': 253}
+        out3 = get_tdays_per_yr(x=x3)
+        self.assertDictEqual(out3_dict, out3)
+
 if __name__ == '__main__':
     unittest.main()
