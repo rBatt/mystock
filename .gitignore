@@ -42,3 +42,4 @@ docs/_build/
 
 # Testing
 .coverage
+.pytest_cache/
