@@ -21,12 +21,12 @@ class TestApiCall(unittest.TestCase):
 
     def test_get_tdays_per_yr(self):
         x1 = [2018, 2019, 2020]
-        out1_dict = {2018: 250, 2019: 251, 2020: 252}
+        out1_dict = {2018: 251, 2019: 252, 2020: 253}
         out1 = get_tdays_per_yr(x=x1)
         self.assertDictEqual(out1_dict, out1)
 
         x2 = ['2018', '2019', '2020']
-        out2_dict = {'2018': 250, '2019': 251, '2020': 252}
+        out2_dict = {'2018': 251, '2019': 252, '2020': 253}
         out2 = get_tdays_per_yr(x=x2)
         self.assertDictEqual(out2_dict, out2)
 
