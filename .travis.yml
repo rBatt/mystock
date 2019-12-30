@@ -11,6 +11,6 @@ install:
 script:
   # - python tests/test_apicall.py
   # - coverage run tests/test_apicall.py
-  - pytest --cov=tests/
+  - pytest --cov=mystock tests/
 afer_success:
   - coveralls
