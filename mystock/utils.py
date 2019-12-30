@@ -38,7 +38,10 @@ def get_tdays_per_yr(x):
     """
     if isinstance(x, (str, int)):
         x = [x]
-    yr_ranges = {i:(f'{i}-01-01', f'{i}-12-31') for i in x}
-    n_tday = lambda x: count_tdays(x).tday.max()
-    out = {k:n_tday(v) for k,v in yr_ranges.items()}
-    return out
+    start = f"{str(min(x))}-01-01"
+    end = f"{str(max(x))}-12-31"
+    days = count_tdays(x=(start, end))
+    days['year'] = days.index.year
+    cnts = days.loc[:,['year']].groupby('year').size()
+    cnts_yrs = cnts.index.map(type(x[0])) # change type to match input (if input was str)
+    return {k:v for k, v, in zip(cnts_yrs, cnts.values)}
