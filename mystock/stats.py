@@ -14,7 +14,8 @@ def _get_total_shares(x): # TODO where does this belong? Util? Some new data mod
         pandas.Series: a series named 'total_shares' that has
             the total shares at a time period
     """
-    tot_x = x.sort_values(by=['symbol','date']).groupby('symbol').shares.cumsum()
+    x.sort_values(by=['symbol','date'], inplace=True)
+    tot_x = x.groupby('symbol').shares.cumsum()
     tot_x.name = 'total_shares'
     return x.join(tot_x)
 
