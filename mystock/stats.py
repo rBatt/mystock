@@ -1,5 +1,5 @@
 """Statistics for Your Stock Data"""
-from .utils import count_tdays
+from . import utils
 
 
 def _get_total_shares(x): # TODO where does this belong? Util? Some new data module?
