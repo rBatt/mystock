@@ -117,7 +117,7 @@ def calc_twr(user_txn, stockdata, total=True, annualize=False):
     """
 
     # join 2 data sets
-    df = user_txn.join(stockdata.close)
+    df = user_txn.join(stockdata.close) # FIXME sort? or check if user_txn is sorted
 
     # prepare cashflow values at time t, and holding values for times t and t-1
     df.loc[:,'txn_value'] = df.shares * df.close
