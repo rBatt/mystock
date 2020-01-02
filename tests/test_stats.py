@@ -23,6 +23,34 @@ class TestApiCall(unittest.TestCase):
         self.stockdata = pd.DataFrame(stockdata)
         self.stockdata.index.names = ['date','symbol']
 
+        # small test df
+        mind = pd.MultiIndex.from_tuples(
+            [
+                ("2019-10-01", "XYZ")
+                , ("2019-10-02", "ABC")
+                , ("2019-10-02", "XYZ")
+                , ("2019-10-03", "ABC")
+                , ("2019-10-03", "XYZ")
+                , ("2019-10-04", "XYZ")
+            ]
+            , names=['date','symbol']
+        )
+        # these rX values are the HPR's
+        r1 = 1.1
+        r2 = 0.9
+        r3 = 1.01
+        self.r1, self.r2, self.r3 = r1, r2, r3
+        self.test_df = pd.DataFrame(
+            {
+                "shares":         [10, 2,  10,       0.8,      1.7,               1.5]
+                , "txn_value":    [20, 1,  20,       0.4,      3.4,               3.0]
+                , "tday":         [0,  1,  1,        2,        2,                 3]
+                , "end_value_t":  [20, 1,  20+20*r1, 0.4+1*r1, 3.4+(20+20*r1)*r2, 3+(3.4+(20+20*r1)*r2)*r3]
+                , "end_value_t1": [0,  0,  20,       1,        20+20*r1,          3.4+(20+20*r1)*r2]
+            }
+            , index=mind
+        ) # TODO should I force all instruments to be present for all dates after 1st non-0 balance?
+
     def test_get_total_shares(self):
         # shuffle dataframe so we can test that _get_total_share sorts
         # (important b/c cummulative sum)
@@ -66,6 +94,35 @@ class TestApiCall(unittest.TestCase):
         self.assertEqual(output1, stats._get_hpr(M_t=6, flow_t=4, M_t1=2.5))
         self.assertEqual(output2, stats._get_hpr(M_t=6.4, flow_t=7.2, M_t1=0.9))
 
+    def get_hpr_df(self, total=False): # helper
+        df = self.test_df.copy()
+        if total:
+            df = df.groupby('date').sum()
+        hpr = stats._get_hpr(M_t=df.end_value_t, flow_t=df.txn_value, M_t1=df.end_value_t1)
+        df['hpr'] = df.index.map(hpr)
+        return df
+
+    def test_get_twr(self):
+        # expected output values (as dictionaries)
+        twr_exp_dict = {'twr': {'ABC': 1.1, 'XYZ': 0.9999000000000002}}
+        twr_ann_exp_dict = {'twr': {'ABC': 29672172494.534416, 'XYZ': 0.9916017093146073}}
+        twr_tot_exp_dict = {'twr': 1.0050674418604653}
+        twr_tot_ann_exp_dict = {'twr': 1.5315420616812092}
+
+        # construct by-symbol TWR DF's (annualized and not)
+        df = self.get_hpr_df(total=False)
+        grouped = df.groupby('symbol')
+        twr = grouped.apply(stats._get_twr, annualize=False, ann_tday=253)
+        self.assertDictEqual(twr_exp_dict, twr.to_dict())
+        twr_ann = grouped.apply(stats._get_twr, annualize=True, ann_tday=253)
+        self.assertDictEqual(twr_ann_exp_dict, twr_ann.to_dict())
+
+        # construct total TWR DF's (annualized and not)
+        df_tot = self.get_hpr_df(total=True)
+        twr_tot = stats._get_twr(df_tot, annualize=False, ann_tday=253)
+        self.assertDictEqual(twr_tot_exp_dict, twr_tot.to_dict())
+        twr_tot_ann = stats._get_twr(df_tot, annualize=True, ann_tday=253)
+        self.assertDictEqual(twr_tot_ann_exp_dict, twr_tot_ann.to_dict())
 
 if __name__ == '__main__':
     unittest.main()
