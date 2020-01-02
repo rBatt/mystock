@@ -60,5 +60,12 @@ class TestApiCall(unittest.TestCase):
         # assert that realized output matches expected output
         self.assertIsNone(assert_frame_equal(output, user_txn_total))
 
+    def test_get_hpr(self):
+        output1 = (6-4)/2.5
+        output2 = (6.4-7.2)/0.9
+        self.assertEqual(output1, stats._get_hpr(M_t=6, flow_t=4, M_t1=2.5))
+        self.assertEqual(output2, stats._get_hpr(M_t=6.4, flow_t=7.2, M_t1=0.9))
+
+
 if __name__ == '__main__':
     unittest.main()
