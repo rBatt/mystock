@@ -124,5 +124,23 @@ class TestApiCall(unittest.TestCase):
         twr_tot_ann = stats._get_twr(df_tot, annualize=True, ann_tday=253)
         self.assertDictEqual(twr_tot_ann_exp_dict, twr_tot_ann.to_dict())
 
+    def test_get_naive_return(self):
+        nr_tot_exp = 0.933305439330544
+        nr_tot_ann_exp = 0.0029648783121983048
+        nr_exp_dict = {'ABC': 1.0714285714285714, 'XYZ': 0.9614655172413794}
+        nr_ann_exp_dict = {'ABC': 6170.889322739344, 'XYZ': 0.03636998546012772}
+
+        df = self.test_df.copy()
+        nr_tot = stats._get_naive_return(df)
+        self.assertEqual(nr_tot_exp, nr_tot)
+        nr_tot_ann = stats._get_naive_return(df, annualize=True)
+        self.assertEqual(nr_tot_ann_exp, nr_tot_ann)
+
+        grouped = self.test_df.groupby('symbol')
+        nr = grouped.apply(stats._get_naive_return, annualize=False).to_dict()
+        self.assertDictEqual(nr_exp_dict, nr)
+        nr_ann = grouped.apply(stats._get_naive_return, annualize=True).to_dict()
+        self.assertDictEqual(nr_ann_exp_dict, nr_ann)
+
 if __name__ == '__main__':
     unittest.main()
