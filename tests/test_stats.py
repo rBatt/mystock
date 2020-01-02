@@ -142,5 +142,42 @@ class TestApiCall(unittest.TestCase):
         nr_ann = grouped.apply(stats._get_naive_return, annualize=True).to_dict()
         self.assertDictEqual(nr_ann_exp_dict, nr_ann)
 
+    def test_calc_twr(self):
+        keys = ['naive_return', 'twr', 'df']
+        df_cols_tot = ['txn_value', 'end_value_t', 'end_value_t1', 'hpr', 'tday']
+        df_cols = df_cols_tot + ['shares', 'total_shares', 'close']
+
+        usr_txn_grouped = self.user_txn.groupby(['date','symbol']).sum()
+        user_txn_totShrs = stats._get_total_shares(usr_txn_grouped)
+        
+        # check with default arguments
+        out_tot = stats.calc_twr(
+            user_txn=user_txn_totShrs
+            , stockdata=self.stockdata
+            , total=True
+            , annualize=False
+        )
+        self.assertIsInstance(out_tot, dict) # output is a dict
+        for k in keys: # make sure that dict has (at least) these components
+            self.assertIn(k, out_tot)
+        self.assertEqual('date', out_tot['df'].index.name)
+        for c in out_tot['df'].columns.tolist(): # make sure the df in the output has these columns
+            self.assertIn(c, df_cols_tot, msg='column missing from dataframe')
+
+        # check with non-default parameters (effect of annualizing not tested)
+        out_ann = stats.calc_twr(
+            user_txn=user_txn_totShrs
+            , stockdata=self.stockdata
+            , total=False
+            , annualize=True
+        )
+        self.assertIsInstance(out_ann, dict)
+        for k in keys:
+            self.assertIn(k, out_ann)
+        self.assertIn('date', out_ann['df'].index.names)
+        self.assertIn('symbol', out_ann['df'].index.names) # new from above
+        for c in out_ann['df'].columns.tolist():
+            self.assertIn(c, df_cols, msg='column missing from dataframe') # different columns
+
 if __name__ == '__main__':
     unittest.main()
